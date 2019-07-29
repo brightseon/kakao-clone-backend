@@ -1,2 +1,3 @@
-# kakao-clone
+# Kakao Clone Backend
+
 Kakao Talk Clone
