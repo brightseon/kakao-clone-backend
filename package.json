@@ -1,0 +1,8 @@
+{
+  "name": "kakao-clone-backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/seon-u/kakao-clone-backend.git",
+  "author": "seon <seonu0823@gmail.com>",
+  "license": "MIT"
+}
