@@ -1,12 +1,18 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import app from './server';
+import socketIO, { Socket } from 'socket.io';
+import app from './app';
+import socketController from './socketController';
 import './db';
 
 const PORT = process.env.PORT || 4000;
 
 const handleListening = () => {
-    console.log(`✅   Listening on : http://localhost:${ PORT }`);
+    console.log(`✅   Server running : http://localhost:${ PORT }`);
 };
 
-app.listen(PORT, handleListening);
+const server = app.listen(PORT, handleListening);
+
+const io = socketIO.listen(server);
+
+io.on('connect', (socket : Socket) => socketController(socket, io));

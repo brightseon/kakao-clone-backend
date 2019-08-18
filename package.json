@@ -11,14 +11,17 @@
   "dependencies": {
     "dotenv": "^8.0.0",
     "express": "^4.17.1",
-    "mongoose": "^5.6.9"
+    "mongoose": "^5.6.9",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
     "@babel/node": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "@types/express": "^4.17.0",
     "@types/mongoose": "^5.5.12",
     "@types/node": "^12.6.9",
+    "@types/socket.io": "^2.1.2",
     "nodemon": "^1.19.1",
     "ts-node": "^8.3.0",
     "typescript": "^3.5.3"
