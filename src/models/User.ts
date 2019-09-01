@@ -1,8 +1,16 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, PassportLocalSchema, Document } from 'mongoose';
+import passportLocalMongoose from 'passport-local-mongoose';
+
+mongoose.set('useCreateIndex', true);
+
+interface IUser extends Document {
+    email : string;
+    name : string;
+};
 
 const UserSchema : Schema = new mongoose.Schema({
-    email : { type : String, required : true },
-    username : { type : String, required : true },
+    email : { type : String, required : true, unique : true },
+    name : { type : String, required : true },
     phone_number : { type : String, default : '' },
     status_message : { type : String, default : '' },
     music : { type : String, default : '' },
@@ -18,10 +26,14 @@ const UserSchema : Schema = new mongoose.Schema({
             ref : 'User'
         }
     ],
-    create_at : { type : 'ObjectId', default : true, required : Date.now },
-    update_at : { type : 'ObjectId', default : true, required : Date.now }
+    create_at : { type : Date, required : true, default : Date.now },
+    update_at : { type : Date, required : true, default : Date.now }
 });
 
-const model = mongoose.model('User', UserSchema);
+UserSchema.plugin(passportLocalMongoose, {
+    usernameField : 'email'
+});
+
+const model = mongoose.model<IUser>('User', UserSchema as PassportLocalSchema);
 
 export default model;
