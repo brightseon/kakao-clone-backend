@@ -73,11 +73,20 @@ export const duplicateCheck = async (req : Request, res : Response) => {
 };
 
 export const login = (req : Request, res : Response) => {
-    try {
-        console.log('params : ', req.body);
-    } catch(err) {
-        console.log('login error : ', err);
-    } finally {
-        res.end();
-    }
+    passport.authenticate('local', (err, user, info, status) => {
+        console.log('user : ', user);
+        if(!user) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : '아이디 또는 비밀번호가 맞지 않습니다.'
+        });
+
+        const { email, name, phone_number, status_message } = user;
+
+        return res.status(200).json({
+            ok : true,
+            data : { email, name, phone_number, status_message },
+            error : null
+        });
+    })(req, res);
 };
