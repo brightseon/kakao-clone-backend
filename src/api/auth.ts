@@ -1,5 +1,6 @@
 import User from '../models/User';
 import { Request, Response } from 'express';
+import passport from 'passport';
 
 export const join = async (req : Request, res : Response) => {
     const { body : { email, name, password, password_confirm } } = req;
@@ -41,11 +42,31 @@ export const duplicateCheck = async (req : Request, res : Response) => {
     const { body : { email } } = req;
 
     try {
-        console.log('email : ', email);
-        
-        return res.status(200);
+        const findUser = await User.findOne({ email });
+
+        if(findUser) {
+            return res.status(409).json({
+                ok : false,
+                data : null,
+                error : '이미 동일한 이메일을 가진 사용자가 존재합니다.'
+            });
+        }
+
+        return res.status(200).json({
+            ok : true,
+            data : {
+                message : '사용 가능한 이메일입니다.'
+            },
+            error : null
+        });
     } catch(err) {
         console.log('duplicateCheck error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
     } finally {
         res.end();
     }
