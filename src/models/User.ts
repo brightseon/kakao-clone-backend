@@ -6,6 +6,8 @@ mongoose.set('useCreateIndex', true);
 interface IUser extends Document {
     email : string;
     name : string;
+    phone_number : string;
+    status_message : string;
 };
 
 const UserSchema : Schema = new mongoose.Schema({

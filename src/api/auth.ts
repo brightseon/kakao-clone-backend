@@ -72,21 +72,38 @@ export const duplicateCheck = async (req : Request, res : Response) => {
     }
 };
 
-export const login = (req : Request, res : Response) => {
-    passport.authenticate('local', (err, user, info, status) => {
-        console.log('user : ', user);
-        if(!user) return res.status(400).json({
-            ok : false,
-            data : null,
-            error : '아이디 또는 비밀번호가 맞지 않습니다.'
-        });
+export const passportLogin = passport.authenticate('local', { failureMessage : '아이디 또는 비밀번호가 맞지 않습니다.' });
 
-        const { email, name, phone_number, status_message } = user;
+export const login = (req : Request, res : Response) => {
+    try {
+        return res.status(200).json({
+            ok : true,
+            data : req.user,
+            error : null
+        });
+    } catch(err) {
+        console.log('login error : ', err);
+    }
+};
+
+export const logout = (req : Request, res : Response) => {
+    try {
+        req.logout();
 
         return res.status(200).json({
             ok : true,
-            data : { email, name, phone_number, status_message },
+            data : {},
             error : null
         });
-    })(req, res);
+    } catch(err) {
+        console.log('logout error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : '로그아웃에 실패했습니다.'
+        });
+    } finally {
+        res.end();
+    }
 };
