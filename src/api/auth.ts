@@ -92,7 +92,9 @@ export const logout = (req : Request, res : Response) => {
 
         return res.status(200).json({
             ok : true,
-            data : {},
+            data : {
+                message : '로그아웃에 성공했습니다.'
+            },
             error : null
         });
     } catch(err) {
