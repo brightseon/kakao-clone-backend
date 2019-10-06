@@ -8,6 +8,8 @@ const LOGOUT = '/logout';
 // User
 const USER = '/user';
 const EDIT_USER = `/edit/:id`;
+const ME = '/me/:username';
+const USER_DETAIL = '/:username';
 
 export const authRoute = {
     auth : AUTH,
@@ -19,5 +21,7 @@ export const authRoute = {
 
 export const userRoute = {
     user : USER,
-    editUser : EDIT_USER
+    editUser : EDIT_USER,
+    me : ME,
+    userDetail : USER_DETAIL
 };

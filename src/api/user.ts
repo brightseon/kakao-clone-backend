@@ -1,5 +1,5 @@
 import User from '../models/User';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { IUserInfoRequest } from '../types';
 
 export const editUser = async (req : IUserInfoRequest, res : Response) => {
@@ -17,7 +17,7 @@ export const editUser = async (req : IUserInfoRequest, res : Response) => {
             status_message,
             music
         });
-        console.log('result : ', result);
+        
         return res.status(200).json({
             ok : true,
             data : result,
@@ -25,6 +25,31 @@ export const editUser = async (req : IUserInfoRequest, res : Response) => {
         });
     } catch(err) {
         console.log('editUser error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const getUserDetail = async (req : Request, res : Response) => {
+    try {
+        const { params : { username : name }, body : { email } } = req;
+        const findUser = await User.find({ name, email });
+        
+        if(findUser.length === 0) throw Error('해당 이름의 유저가 존재하지 않습니다.');
+        
+        return res.status(200).json({
+            ok : true,
+            data : findUser,
+            error : null
+        });
+    } catch(err) {
+        console.log('getUserDetail error : ', err);
 
         return res.status(500).json({
             ok : false,
