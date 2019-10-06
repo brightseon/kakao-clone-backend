@@ -45,11 +45,35 @@ export const getUserDetail = async (req : Request, res : Response) => {
         
         return res.status(200).json({
             ok : true,
-            data : findUser,
+            data : findUser[0],
             error : null
         });
     } catch(err) {
         console.log('getUserDetail error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const getFriends = async (req : Request, res : Response) => {
+    try {
+        const { body : { email } } = req;
+        const userInfo = await User.find({ email });
+        const friends = userInfo[0].friends;
+
+        return res.status(200).json({
+            ok : true,
+            data : friends,
+            error : null
+        });
+    } catch(err) {
+        console.log('getFriends error : ', err);
 
         return res.status(500).json({
             ok : false,

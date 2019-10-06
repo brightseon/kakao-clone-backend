@@ -10,6 +10,7 @@ const USER = '/user';
 const EDIT_USER = `/edit/:id`;
 const ME = '/me/:username';
 const USER_DETAIL = '/:username';
+const GET_FRIENDS = '/friends';
 
 export const authRoute = {
     auth : AUTH,
@@ -23,5 +24,6 @@ export const userRoute = {
     user : USER,
     editUser : EDIT_USER,
     me : ME,
-    userDetail : USER_DETAIL
+    userDetail : USER_DETAIL,
+    getFreinds : GET_FRIENDS
 };
