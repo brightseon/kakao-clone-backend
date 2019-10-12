@@ -12,6 +12,7 @@ const ME = '/me/:username';
 const USER_DETAIL = '/:username';
 const GET_FRIENDS = '/friends';
 const ADD_FRIEND = '/addFriend';
+const DELETE_FRIEND = '/deleteFrined';
 
 export const authRoute = {
     auth : AUTH,
@@ -27,5 +28,6 @@ export const userRoute = {
     me : ME,
     userDetail : USER_DETAIL,
     getFreinds : GET_FRIENDS,
-    addFriend : ADD_FRIEND
+    addFriend : ADD_FRIEND,
+    deleteFrined : DELETE_FRIEND
 };

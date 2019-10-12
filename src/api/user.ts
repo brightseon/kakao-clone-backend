@@ -1,6 +1,7 @@
 import User from '../models/User';
 import { Request, Response } from 'express';
 import { IUserInfoRequest } from '../types';
+import { ObjectId } from 'bson';
 
 export const editUser = async (req : IUserInfoRequest, res : Response) => {
     try {
@@ -116,6 +117,41 @@ export const addFriend = async (req : Request, res : Response) => {
         }
     } catch(err) {
         console.log('addFriend error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const deleteFriend = async (req : Request, res : Response) => {
+    try {
+        const { body : { id }} = req;
+        console.log('id : ', id);
+        const findUser = await User.findById(id);
+
+        if(findUser) {
+            // const result = await User.updateOne({ _id : id }, { $push : { friends : { 'ObjectId' : id } }});
+            const result = await User.findByIdAndUpdate(id, { $pull : { 'friends' : id }});
+
+            return res.status(200).json({
+                ok : true,
+                data : result,
+                error : null
+            });
+        } else {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : '유저가 존재하지 않습니다.'
+            });
+        }
+    } catch(err) {
+        console.log('deleteFriend error : ', err);
 
         return res.status(500).json({
             ok : false,

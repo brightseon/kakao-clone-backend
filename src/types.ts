@@ -7,7 +7,7 @@ export interface IUser {
     status_message : string;
     music : string;
     rooms : [];
-    friends : [];
+    friends : IUser[];
     create_at : Date;
     update_at : Date;
 };
