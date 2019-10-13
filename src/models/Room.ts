@@ -1,8 +1,16 @@
 import mongoose from 'mongoose';
 
 const RoomSchema = new mongoose.Schema({
-    last_message : { type : 'ObjectId', ref : 'Chat', required : true },
+    maker : { type : 'ObjectId', ref : 'User', required : true },
+    participants : [
+        {
+            type : mongoose.Schema.Types.ObjectId,
+            ref : 'User'
+        }
+    ],
+    last_message : { type : String, required : true },
     member_count : { type : Number, required : true },
+    room_image : { type : String, required : true },
     create_at : { type : Date, default : Date.now, required : true },
     update_at : { type : Date, default : Date.now, required : true }
 });
