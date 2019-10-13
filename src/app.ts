@@ -2,9 +2,10 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
-import { authRoute, userRoute } from './routes';
+import { authRoute, userRoute, chatRoute } from './routes';
 import authRouter from './routers/authRouter';
 import userRouter from './routers/userRouter';
+import chatRouter from './routers/chatRouter';
 import mongoose from 'mongoose';
 import MongoStore from 'connect-mongo';
 import './passport';
@@ -27,5 +28,6 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(authRoute.auth, authRouter);
 app.use(userRoute.user, userRouter);
+app.use(chatRoute.chat, chatRouter);
 
 export default app;

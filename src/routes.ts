@@ -14,6 +14,10 @@ const GET_FRIENDS = '/friends';
 const ADD_FRIEND = '/addFriend';
 const DELETE_FRIEND = '/deleteFrined';
 
+// Chat
+const CHAT = '/chat';
+const CHATS = '/chats';
+
 export const authRoute = {
     auth : AUTH,
     join : JOIN,
@@ -30,4 +34,9 @@ export const userRoute = {
     getFreinds : GET_FRIENDS,
     addFriend : ADD_FRIEND,
     deleteFrined : DELETE_FRIEND
+};
+
+export const chatRoute = {
+    chat : CHAT,
+    chats : CHATS
 };
