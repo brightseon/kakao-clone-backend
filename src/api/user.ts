@@ -1,6 +1,7 @@
 import User from '../models/User';
 import { Request, Response } from 'express';
 import { IUserInfoRequest } from '../types';
+import { checkValidate } from '../utils';
 
 export const editUser = async (req : IUserInfoRequest, res : Response) => {
     try {
@@ -39,6 +40,17 @@ export const editUser = async (req : IUserInfoRequest, res : Response) => {
 export const getUserDetail = async (req : Request, res : Response) => {
     try {
         const { params : { username : name }, body : { email } } = req;
+
+        const notProperty = checkValidate(req, ['username', 'friend']);
+
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
+
         const findUser = await User.findOne({ name, email });
         
         if(!findUser) throw Error('해당 이름의 유저가 존재하지 않습니다.');
@@ -64,6 +76,17 @@ export const getUserDetail = async (req : Request, res : Response) => {
 export const getFriends = async (req : Request, res : Response) => {
     try {
         const { body : { email } } = req;
+
+        const notProperty = checkValidate(req, ['email']);
+
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
+
         const findUser = await User.findOne({ email });
 
         if(findUser) {
@@ -97,6 +120,16 @@ export const getFriends = async (req : Request, res : Response) => {
 export const addFriend = async (req : Request, res : Response) => {
     try {
         const { body : { me , friend } } = req;
+        const notProperty = checkValidate(req, ['me', 'friend']);
+
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
+
         const findUser = await User.findOne({ _id : friend });
         
         if(findUser) {
@@ -130,18 +163,15 @@ export const addFriend = async (req : Request, res : Response) => {
 export const deleteFriend = async (req : Request, res : Response) => {
     try {
         const { body : { me, friend }} = req;
+        const notProperty = checkValidate(req, ['me', 'friend']);
 
-        if(me) return res.status(400).json({
-            ok : false,
-            data : null,
-            error : `필수 파라미터인 'me'가 없습니다.`
-        });
-
-        if(friend) return res.status(400).json({
-            ok : false,
-            data : null,
-            error : `필수 파라미터인 'friend'가 없습니다.`
-        });
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
 
         const result = await User.findByIdAndUpdate(me, { $pull : { 'friends' : friend }});
 

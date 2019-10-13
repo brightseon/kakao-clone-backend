@@ -1,12 +1,23 @@
 import User from '../models/User';
 import { Request, Response } from 'express';
 import passport from 'passport';
+import { checkValidate } from '../utils';
 
 export const join = async (req : Request, res : Response) => {
     const { body : { email, name, password, password_confirm } } = req;
 
     try {
         console.log('email, name, password, password_confirm : ', email, name, password, password_confirm);
+
+        const notProperty = checkValidate(req, ['email', 'name', 'password', 'password_confirm']);
+
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
         
         if(password !== password_confirm) {
             return res.status(400).json({
@@ -39,9 +50,18 @@ export const join = async (req : Request, res : Response) => {
 };
 
 export const duplicateCheck = async (req : Request, res : Response) => {
-    const { body : { email } } = req;
-
     try {
+        const { body : { email } } = req;
+        const notProperty = checkValidate(req, ['email']);
+
+        if(notProperty) {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+            });
+        }
+
         const findUser = await User.findOne({ email });
 
         if(findUser) {
