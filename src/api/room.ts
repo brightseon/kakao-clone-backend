@@ -1,11 +1,11 @@
-import Chat from '../models/Chat';
+import Room from '../models/Room';
 import { Request, Response } from 'express';
 import { checkValidate } from '../utils';
 
-export const chats = async (req : Request, res : Response) => {
+export const rooms = async (req : Request, res : Response) => {
     try {
-        const { body : { chat_id } } = req;
-        const notProperty = checkValidate(req.body, ['chat_id']);
+        const { body : { room_id } } = req;
+        const notProperty = checkValidate(req.body, ['room_id']);
 
         if(notProperty) return res.status(400).json({
             ok : false,
@@ -14,10 +14,10 @@ export const chats = async (req : Request, res : Response) => {
         });
 
     } catch(err) {
-        console.log('chats error : ', err);
+        console.log('rooms error : ', err);
 
         return res.status(500).json({
-            ok : true,
+            ok : false,
             data : null,
             error : err.message
         });

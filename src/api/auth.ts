@@ -4,12 +4,9 @@ import passport from 'passport';
 import { checkValidate } from '../utils';
 
 export const join = async (req : Request, res : Response) => {
-    const { body : { email, name, password, password_confirm } } = req;
-
     try {
-        console.log('email, name, password, password_confirm : ', email, name, password, password_confirm);
-
-        const notProperty = checkValidate(req, ['email', 'name', 'password', 'password_confirm']);
+        const { body : { email, name, password, password_confirm } } = req;
+        const notProperty = checkValidate(req.body, ['email', 'name', 'password', 'password_confirm']);
 
         if(notProperty) {
             return res.status(400).json({
@@ -52,7 +49,7 @@ export const join = async (req : Request, res : Response) => {
 export const duplicateCheck = async (req : Request, res : Response) => {
     try {
         const { body : { email } } = req;
-        const notProperty = checkValidate(req, ['email']);
+        const notProperty = checkValidate(req.body, ['email']);
 
         if(notProperty) {
             return res.status(400).json({

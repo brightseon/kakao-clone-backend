@@ -1,11 +1,9 @@
-import { Request } from "express";
-
-export const checkValidate = (req : Request, properties : string[]) : string => {
+export const checkValidate = (properties : Object, requiredKeys : string[]) : string => {
     let notProperty = '';
 
-    properties.forEach(property => {
-        if(!req.body[property]) {
-            notProperty = property;
+    requiredKeys.forEach(key => {
+        if(!properties[key]) {
+            notProperty = key;
 
             return;
         }

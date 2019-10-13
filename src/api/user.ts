@@ -5,14 +5,21 @@ import { checkValidate } from '../utils';
 
 export const editUser = async (req : IUserInfoRequest, res : Response) => {
     try {
-        const { params : { id : _id }, body : { email, name, phone_number, status_message, music } } = req;
-        console.log('email, name, phone_number, status_message, music : ', email, name, phone_number, status_message, music);
+        const { body : { user_id, name, phone_number, status_message, music } } = req;
+
+        const notProperty = checkValidate(req.body, ['user_id']);
+
+        if(notProperty) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 '${ notProperty }'가 없습니다.`
+        });
 
         if(name.length > 10) throw Error('유저 이름이 너무 깁니다(10자 이내).');
 
         if(status_message.length > 20) throw Error('상태메시지가 너무 깁니다(20자 이내).');
 
-        const result = await User.findOneAndUpdate({ _id }, {
+        const result = await User.findByIdAndUpdate(user_id, {
             name,
             phone_number,
             status_message,
@@ -41,7 +48,7 @@ export const getUserDetail = async (req : Request, res : Response) => {
     try {
         const { params : { username : name }, body : { email } } = req;
 
-        const notProperty = checkValidate(req, ['username', 'friend']);
+        const notProperty = checkValidate({ ...req.params, ...req.body }, ['username', 'email']);
 
         if(notProperty) {
             return res.status(400).json({
@@ -77,7 +84,7 @@ export const getFriends = async (req : Request, res : Response) => {
     try {
         const { body : { email } } = req;
 
-        const notProperty = checkValidate(req, ['email']);
+        const notProperty = checkValidate(req.body, ['email']);
 
         if(notProperty) {
             return res.status(400).json({
@@ -119,8 +126,8 @@ export const getFriends = async (req : Request, res : Response) => {
 
 export const addFriend = async (req : Request, res : Response) => {
     try {
-        const { body : { me , friend } } = req;
-        const notProperty = checkValidate(req, ['me', 'friend']);
+        const { body : { me_id, friend_id } } = req;
+        const notProperty = checkValidate(req.body, ['me_id', 'friend_id']);
 
         if(notProperty) {
             return res.status(400).json({
@@ -130,10 +137,10 @@ export const addFriend = async (req : Request, res : Response) => {
             });
         }
 
-        const findUser = await User.findOne({ _id : friend });
+        const findUser = await User.findOne({ _id : friend_id });
         
         if(findUser) {
-            const result = await User.findOneAndUpdate({ _id : me }, { $push : { friends : findUser } });
+            const result = await User.findOneAndUpdate({ _id : me_id }, { $push : { friends : findUser } });
     
             return res.status(200).json({
                 ok : true,
@@ -162,8 +169,8 @@ export const addFriend = async (req : Request, res : Response) => {
 
 export const deleteFriend = async (req : Request, res : Response) => {
     try {
-        const { body : { me, friend }} = req;
-        const notProperty = checkValidate(req, ['me', 'friend']);
+        const { body : { me_id, friend_id }} = req;
+        const notProperty = checkValidate(req.body, ['me_id', 'friend_id']);
 
         if(notProperty) {
             return res.status(400).json({
@@ -173,7 +180,7 @@ export const deleteFriend = async (req : Request, res : Response) => {
             });
         }
 
-        const result = await User.findByIdAndUpdate(me, { $pull : { 'friends' : friend }});
+        const result = await User.findByIdAndUpdate(me_id, { $pull : { 'friends' : friend_id }});
 
         return res.status(200).json({
             ok : true,
