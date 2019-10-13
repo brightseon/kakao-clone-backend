@@ -1,7 +1,6 @@
 import User from '../models/User';
 import { Request, Response } from 'express';
 import { IUserInfoRequest } from '../types';
-import { ObjectId } from 'bson';
 
 export const editUser = async (req : IUserInfoRequest, res : Response) => {
     try {
@@ -131,23 +130,26 @@ export const addFriend = async (req : Request, res : Response) => {
 export const deleteFriend = async (req : Request, res : Response) => {
     try {
         const { body : { me, friend }} = req;
-        const findUser = await User.findById(me);
 
-        if(findUser) {
-            const result = await User.findByIdAndUpdate(me, { $pull : { 'friends' : friend }});
+        if(me) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 'me'가 없습니다.`
+        });
 
-            return res.status(200).json({
-                ok : true,
-                data : result,
-                error : null
-            });
-        } else {
-            return res.status(400).json({
-                ok : false,
-                data : null,
-                error : '유저가 존재하지 않습니다.'
-            });
-        }
+        if(friend) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 'friend'가 없습니다.`
+        });
+
+        const result = await User.findByIdAndUpdate(me, { $pull : { 'friends' : friend }});
+
+        return res.status(200).json({
+            ok : true,
+            data : result,
+            error : null
+        });
     } catch(err) {
         console.log('deleteFriend error : ', err);
 
