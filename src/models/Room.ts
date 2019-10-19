@@ -8,7 +8,7 @@ const RoomSchema = new mongoose.Schema({
             ref : 'User'
         }
     ],
-    last_message : { type : String, required : true },
+    last_message : { type : String, required : false, default : '' },
     member_count : { type : Number, required : true },
     room_image : { type : String, required : false, default : '' },
     create_at : { type : Date, default : Date.now, required : true },

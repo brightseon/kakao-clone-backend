@@ -27,7 +27,7 @@ export const rooms = async (req : Request, res : Response) => {
         });
 
         const rooms = await Promise.all(user.rooms.map(id => (
-            Room.findById(id).slice([defaultLimit * (defaultPage - 1), defaultLimit * defaultPage])
+            Room.findById(id).skip(defaultLimit * (defaultPage - 1)).limit(defaultLimit * defaultPage)
         )));
         
         return res.status(200).json({
@@ -37,6 +37,47 @@ export const rooms = async (req : Request, res : Response) => {
         });
     } catch(err) {
         console.log('rooms error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const addRoom = async (req : Request, res : Response) => {
+    try {
+        const { body : { maker, participants, room_image, chat_name } } = req;
+        const notProperty = checkValidate(req.body, ['maker', 'participants']);
+
+        if(notProperty) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+        });
+
+        const room = await Room.create({ 
+            maker,
+            participants,
+            room_image,
+            name : chat_name,
+            member_count : participants.length
+        });
+
+        await User.findByIdAndUpdate(maker, {
+            $push : { rooms : room._id }
+        });
+
+        return res.status(200).json({
+            ok : true,
+            data : room,
+            error : null
+        });
+    } catch(err) {
+        console.log('addRoom error :', err);
 
         return res.status(500).json({
             ok : false,

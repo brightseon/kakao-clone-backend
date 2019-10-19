@@ -17,6 +17,7 @@ const DELETE_FRIEND = '/deleteFrined';
 // Room
 const ROOM = '/room';
 const ROOMS = '/rooms';
+const ADD_ROOM = '/addRoom';
 
 // Chat
 const CHAT = '/chat';
@@ -42,7 +43,8 @@ export const userRoute = {
 
 export const roomRoute = {
     room : ROOM,
-    rooms : ROOMS
+    rooms : ROOMS,
+    addRoom : ADD_ROOM
 };
 
 export const chatRoute = {
