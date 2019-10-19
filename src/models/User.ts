@@ -10,6 +10,7 @@ const UserSchema : Schema = new mongoose.Schema({
     name : { type : String, required : true },
     phone_number : { type : String, default : '' },
     status_message : { type : String, default : '' },
+    profile_image : { type : String, default : '' },
     music : { type : String, default : '' },
     rooms : [
         {

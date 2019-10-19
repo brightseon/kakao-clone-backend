@@ -10,7 +10,7 @@ const RoomSchema = new mongoose.Schema({
     ],
     last_message : { type : String, required : true },
     member_count : { type : Number, required : true },
-    room_image : { type : String, required : true },
+    room_image : { type : String, required : false, default : '' },
     create_at : { type : Date, default : Date.now, required : true },
     update_at : { type : Date, default : Date.now, required : true }
 });
