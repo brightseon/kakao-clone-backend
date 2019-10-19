@@ -88,3 +88,37 @@ export const addRoom = async (req : Request, res : Response) => {
         res.end();
     }
 };
+
+export const editRoom = async (req : Request, res : Response) => {
+    try {
+        const { body : { room_id, room_name, room_image } } = req;
+        const notProperty = checkValidate(req.body, ['room_id']);
+        
+        if(notProperty) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+        });
+
+        const result = await Room.findByIdAndUpdate(room_id, {
+            name : room_name,
+            room_image
+        });
+        
+        return res.status(200).json({
+            ok : true,
+            data : result,
+            error : null
+        });
+    } catch(err) {
+        console.log('editRoom error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
