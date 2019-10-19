@@ -82,7 +82,9 @@ export const getUserDetail = async (req : Request, res : Response) => {
 
 export const getFriends = async (req : Request, res : Response) => {
     try {
-        const { body : { email } } = req;
+        const defaultLimit = 50;
+        let defaultPage = 1;
+        const { body : { email, page } } = req;
 
         const notProperty = checkValidate(req.body, ['email']);
 
@@ -94,10 +96,15 @@ export const getFriends = async (req : Request, res : Response) => {
             });
         }
 
+        if(page) defaultPage = page;
+
         const findUser = await User.findOne({ email });
 
         if(findUser) {
-            const friends = findUser.friends;
+            const friendsId = findUser.friends;
+            const friends = await Promise.all(friendsId.map(id => 
+                User.findById(id).slice([defaultLimit * (defaultPage - 1), defaultLimit * defaultPage])
+            ));
     
             return res.status(200).json({
                 ok : true,

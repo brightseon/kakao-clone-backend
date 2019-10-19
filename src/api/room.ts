@@ -1,11 +1,14 @@
+import User from '../models/User';
 import Room from '../models/Room';
 import { Request, Response } from 'express';
 import { checkValidate } from '../utils';
 
 export const rooms = async (req : Request, res : Response) => {
     try {
-        const { body : { room_id, limit } } = req;
-        const notProperty = checkValidate(req.body, ['room_id']);
+        const defaultLimit = 50;
+        let defaultPage = 1;
+        const { body : { user_id, page } } = req;
+        const notProperty = checkValidate(req.body, ['user_id']);
 
         if(notProperty) return res.status(400).json({
             ok : false,
@@ -13,6 +16,25 @@ export const rooms = async (req : Request, res : Response) => {
             error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
         });
 
+        if(page) defaultPage = page;
+
+        const user = await User.findById(user_id);
+
+        if(!user) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : '해당 유저가 존재하지 않습니다.'
+        });
+
+        const rooms = await Promise.all(user.rooms.map(id => (
+            Room.findById(id).slice([defaultLimit * (defaultPage - 1), defaultLimit * defaultPage])
+        )));
+        
+        return res.status(200).json({
+            ok : true,
+            data : rooms,
+            error : null
+        });
     } catch(err) {
         console.log('rooms error : ', err);
 
