@@ -67,9 +67,11 @@ export const addRoom = async (req : Request, res : Response) => {
             member_count : participants.length
         });
 
-        await User.findByIdAndUpdate(maker, {
-            $push : { rooms : room._id }
-        });
+        await Promise.all(
+            participants.map(participant => User.findByIdAndUpdate(participant, {
+                $push : { rooms : room._id }
+            }))
+        );
 
         return res.status(200).json({
             ok : true,
@@ -112,6 +114,42 @@ export const editRoom = async (req : Request, res : Response) => {
         });
     } catch(err) {
         console.log('editRoom error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const deleteRoom = async (req : Request, res : Response) => {
+    try {
+        const { body : { room_id } } = req;
+        const notProperty = checkValidate(req.body, ['room_id']);
+
+        if(notProperty) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+        });
+
+        const result = await Room.findById(room_id);
+        const participants = (await Room.findById(room_id)).participants;
+
+        await Promise.all(
+            participants.map(participant => User.findByIdAndUpdate(participant, { $pull : { rooms : room_id } }))
+        );
+
+        return res.status(200).json({
+            ok : false,
+            data : result,
+            error : null
+        });
+    } catch(err) {
+        console.log('deleteRoom error : ', err);
 
         return res.status(500).json({
             ok : false,

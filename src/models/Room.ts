@@ -1,4 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose, { Document } from 'mongoose';
+import { IRoom } from '../types';
+
+interface IRoomDocument extends Document, IRoom {};
 
 const RoomSchema = new mongoose.Schema({
     maker : { type : 'ObjectId', ref : 'User', required : true },
@@ -16,6 +19,6 @@ const RoomSchema = new mongoose.Schema({
     update_at : { type : Date, default : Date.now, required : true }
 });
 
-const model = mongoose.model('Room', RoomSchema);
+const model = mongoose.model<IRoomDocument>('Room', RoomSchema);
 
 export default model;
