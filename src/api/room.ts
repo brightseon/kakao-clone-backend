@@ -136,8 +136,8 @@ export const deleteRoom = async (req : Request, res : Response) => {
             error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
         });
 
-        const result = await Room.findById(room_id);
         const participants = (await Room.findById(room_id)).participants;
+        const result = await Room.findByIdAndDelete(room_id);
 
         await Promise.all(
             participants.map(participant => User.findByIdAndUpdate(participant, { $pull : { rooms : room_id } }))

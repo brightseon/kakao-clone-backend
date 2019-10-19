@@ -147,7 +147,8 @@ export const addFriend = async (req : Request, res : Response) => {
         const findUser = await User.findOne({ _id : friend_id });
         
         if(findUser) {
-            const result = await User.findOneAndUpdate({ _id : me_id }, { $push : { friends : findUser } });
+            const result = await User.findByIdAndUpdate(me_id, { $push : { friends : friend_id } });
+            await User.findByIdAndUpdate(friend_id, { $push : { friends : me_id } });
     
             return res.status(200).json({
                 ok : true,
@@ -188,6 +189,7 @@ export const deleteFriend = async (req : Request, res : Response) => {
         }
 
         const result = await User.findByIdAndUpdate(me_id, { $pull : { 'friends' : friend_id }});
+        await User.findByIdAndUpdate(friend_id, { $pull : { friends : me_id } });
 
         return res.status(200).json({
             ok : true,
