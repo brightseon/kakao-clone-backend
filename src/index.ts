@@ -11,9 +11,8 @@ import './models/Room';
 
 const PORT = process.env.PORT || 4000;
 
-const handleListening = () => {
+const handleListening = () => 
     console.log(`✅   Server running : http://localhost:${ PORT }`);
-};
 
 const server = app.listen(PORT, handleListening);
 
