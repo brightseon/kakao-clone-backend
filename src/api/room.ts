@@ -50,7 +50,7 @@ export const rooms = async (req : Request, res : Response) => {
 
 export const addRoom = async (req : Request, res : Response) => {
     try {
-        const { body : { maker, participants, room_image, chat_name } } = req;
+        const { body : { maker, participants, room_image, room_name } } = req;
         const notProperty = checkValidate(req.body, ['maker', 'participants']);
 
         if(notProperty) return res.status(400).json({
@@ -63,7 +63,7 @@ export const addRoom = async (req : Request, res : Response) => {
             maker,
             participants,
             room_image,
-            name : chat_name,
+            name : room_name,
             member_count : participants.length
         });
 
@@ -144,12 +144,51 @@ export const deleteRoom = async (req : Request, res : Response) => {
         );
 
         return res.status(200).json({
-            ok : false,
+            ok : true,
             data : result,
             error : null
         });
     } catch(err) {
         console.log('deleteRoom error : ', err);
+
+        return res.status(500).json({
+            ok : false,
+            data : null,
+            error : err.message
+        });
+    } finally {
+        res.end();
+    }
+};
+
+export const room = async (req : Request, res : Response) => {
+    try {
+        const { body : { room_id } } = req;
+        const notProperty = checkValidate(req.body, ['room_id']);
+
+        if(notProperty) return res.status(400).json({
+            ok : false,
+            data : null,
+            error : `필수 파라미터인 '${ notProperty }'가 존재하지 않습니다.`
+        });
+
+        const result = await Room.findById(room_id);
+
+        if(result) {
+            return res.status(200).json({
+                ok : true,
+                data : result,
+                error : null
+            });
+        } else {
+            return res.status(400).json({
+                ok : false,
+                data : null,
+                error : '채팅방이 존재하지 않습니다.'
+            });
+        }
+    } catch(err) {
+        console.log('room error : ', err);
 
         return res.status(500).json({
             ok : false,
