@@ -20,6 +20,7 @@ const ROOMS = '/rooms';
 const ADD_ROOM = '/addRoom';
 const EDIT_ROOM = '/editRoom';
 const DELETE_ROOM = '/deleteRoom';
+const GET_ROOM = '/:id';
 
 // Chat
 const CHAT = '/chat';
@@ -48,7 +49,8 @@ export const roomRoute = {
     rooms : ROOMS,
     addRoom : ADD_ROOM,
     editRoom : EDIT_ROOM,
-    deleteRoom : DELETE_ROOM
+    deleteRoom : DELETE_ROOM,
+    getRoom : GET_ROOM
 };
 
 export const chatRoute = {

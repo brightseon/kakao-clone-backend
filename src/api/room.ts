@@ -163,8 +163,8 @@ export const deleteRoom = async (req : Request, res : Response) => {
 
 export const room = async (req : Request, res : Response) => {
     try {
-        const { body : { room_id } } = req;
-        const notProperty = checkValidate(req.body, ['room_id']);
+        const { params : { id : room_id } } = req;
+        const notProperty = checkValidate(req.params, ['id']);
 
         if(notProperty) return res.status(400).json({
             ok : false,
