@@ -26,9 +26,11 @@ export const rooms = async (req : Request, res : Response) => {
             error : '해당 유저가 존재하지 않습니다.'
         });
 
-        const rooms = await Promise.all(user.rooms.map(id => (
-            Room.findById(id).skip(defaultLimit * (defaultPage - 1)).limit(defaultLimit * defaultPage)
-        )));
+        const getRoomsId = user.rooms.reverse().slice(
+            defaultLimit * (defaultPage - 1),
+            defaultLimit * defaultPage
+        );
+        const rooms = await Promise.all(getRoomsId.map(id => Room.findById(id)));
         
         return res.status(200).json({
             ok : true,
@@ -140,7 +142,9 @@ export const deleteRoom = async (req : Request, res : Response) => {
         const result = await Room.findByIdAndDelete(room_id);
 
         await Promise.all(
-            participants.map(participant => User.findByIdAndUpdate(participant, { $pull : { rooms : room_id } }))
+            participants.map(participant => 
+                User.findByIdAndUpdate(participant, { $pull : { rooms : room_id } })
+            )
         );
 
         return res.status(200).json({

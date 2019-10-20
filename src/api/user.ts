@@ -101,9 +101,12 @@ export const getFriends = async (req : Request, res : Response) => {
         const findUser = await User.findOne({ email });
 
         if(findUser) {
-            const friendsId = findUser.friends;
+            const friendsId = findUser.friends.slice(
+                defaultLimit * (defaultPage - 1),
+                defaultLimit * defaultPage
+            );
             const friends = await Promise.all(friendsId.map(id => 
-                User.findById(id).slice([defaultLimit * (defaultPage - 1), defaultLimit * defaultPage])
+                User.findById(id)
             ));
     
             return res.status(200).json({
