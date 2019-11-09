@@ -2,6 +2,7 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
 import session from 'express-session';
+import cors from 'cors';
 import { authRoute, userRoute, chatRoute, roomRoute } from './routes';
 import authRouter from './routers/authRouter';
 import userRouter from './routers/userRouter';
@@ -27,6 +28,7 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(cors());
 app.use(authRoute.auth, authRouter);
 app.use(userRoute.user, userRouter);
 app.use(roomRoute.room, roomRouter);
