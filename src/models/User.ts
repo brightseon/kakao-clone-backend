@@ -12,6 +12,7 @@ const UserSchema : Schema = new mongoose.Schema({
     status_message : { type : String, default : '' },
     profile_image : { type : String, default : '' },
     music : { type : String, default : '' },
+    favorites : { type : Boolean, default : false },
     rooms : [
         {
             type : mongoose.Schema.Types.ObjectId,
