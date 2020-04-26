@@ -1,11 +1,10 @@
-import mongoose, { Schema, PassportLocalSchema, Document } from 'mongoose';
+import mongoose, { Schema, PassportLocalSchema } from 'mongoose';
 import passportLocalMongoose from 'passport-local-mongoose';
-import { IUser } from '../types';
+import { IUserDocument, IUser } from '../types';
+import migration from '../utils/migration';
 mongoose.set('useCreateIndex', true);
 
-interface IUserDocument extends Document, IUser {};
-
-const UserSchema : Schema = new mongoose.Schema({
+const UserSchema : Schema<IUser> = new mongoose.Schema({
     email : { type : String, required : true, unique : true },
     name : { type : String, required : true },
     phone_number : { type : String, default : '' },
@@ -34,5 +33,7 @@ UserSchema.plugin(passportLocalMongoose, {
 });
 
 const model = mongoose.model<IUserDocument>('User', UserSchema as PassportLocalSchema);
+
+migration(model, 'favorites', false);
 
 export default model;

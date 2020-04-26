@@ -105,9 +105,14 @@ export const getFriends = async (req : Request, res : Response) => {
                 defaultLimit * (defaultPage - 1),
                 defaultLimit * defaultPage
             );
-            const friends = await Promise.all(friendsId.map(id => 
-                User.findById(id)
+
+            const friends = await Promise.all(friendsId.map(id => {
+                console.log(User.findById(id));
+                return User.findById(id).where('favorites').equals(false)
+            }
             ));
+
+            console.log(friends);
     
             return res.status(200).json({
                 ok : true,

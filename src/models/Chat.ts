@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
+import { IChatDocument, IChat } from '../types';
 
-const ChatSchema : Schema = new mongoose.Schema({
+const ChatSchema : Schema<IChat> = new mongoose.Schema({
     room : { type : 'ObjectId', ref : 'Room', required : true },
     from : { type : 'ObjectId', ref : 'User', required : true },
     to : { type : 'ObjectId', ref : 'User', required : true },
@@ -10,6 +11,6 @@ const ChatSchema : Schema = new mongoose.Schema({
     update_at : { type : Date, default : Date.now, required : true }
 });
 
-const model = mongoose.model('Chat', ChatSchema);
+const model = mongoose.model<IChatDocument>('Chat', ChatSchema);
 
 export default model;

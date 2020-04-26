@@ -1,9 +1,7 @@
-import mongoose, { Document } from 'mongoose';
-import { IRoom } from '../types';
+import mongoose, { Schema } from 'mongoose';
+import { IRoomDocument, IRoom } from '../types';
 
-interface IRoomDocument extends Document, IRoom {};
-
-const RoomSchema = new mongoose.Schema({
+const RoomSchema : Schema<IRoom> = new mongoose.Schema({
     maker : { type : 'ObjectId', ref : 'User', required : true },
     participants : [
         {
